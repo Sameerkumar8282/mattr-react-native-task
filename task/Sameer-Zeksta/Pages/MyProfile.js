@@ -1,112 +1,77 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet, Text, ScrollView } from 'react-native';
+const data = require('../data.json'); 
 
 const MyProfile = () => {
+  const user = data[0]; 
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.closeButton}>
-          <Text style={styles.closeText}>X</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.profileImageContainer}>
-        {/* <Image source={require('./profile_image.jpg')} style={styles.profileImage} /> */}
-      </View>
-
-      <View style={styles.profileInfo}>
-        <Text style={styles.name}>Frank Stark, 23</Text>
-        <Text style={styles.location}>London, United Kingdom</Text>
-
-        <Text style={styles.description}>
-          Hey, I'm Frank, a 23-year-old marketing enthusiast who loves outdoor
-          adventures. Whether it's hiking or a cozy night in, I embrace every
-          moment with enthusiasm. My infectious humor and love for deep
-          conversations define me. I'm seeking a partner ready for genuine
-          connections and new adventures. Connect with me and let's dive in!
-        </Text>
-      </View>
-
-      <View style={styles.interests}>
-        <Text style={styles.interestsTitle}>Interests</Text>
-        <View style={styles.interestContainer}>
-          <Text style={styles.interest}>RUNNING</Text>
-          <Text style={styles.interest}>HIKING</Text>
-          <Text style={styles.interest}>OUTDOORS</Text>
+    <View>
+      <ScrollView>
+        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
+          {user.photos.map((photo) => (
+            <Image key={photo.id} style={styles.image} source={{ uri: photo.path }} />
+          ))}
+        </ScrollView>
+        <View style={styles.details}>
+          <Text style={styles.name}>{`${user.first_name} ${user.last_name}, ${new Date().getFullYear() - new Date(user.dob.split('/').reverse().join('/')).getFullYear()}`}</Text>
+          <Text style={styles.location}>{`${user.location.city}, ${user.location.country}`}</Text>
+          <Text style={styles.description}>{user.bio}</Text>
+          <Text style={styles.interestText}>Interests</Text>
+          <View style={styles.interestRow}>
+            {user.interests.map((interest) => (
+              <View key={interest.id} style={styles.interestCol}>
+                <Text style={styles.interest}>{interest.name}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FF0080', // Assuming the background color is pink
-    alignItems: 'center',
-    justifyContent: 'center',
+  image: {
+    width: 400,
+    height: 400,
   },
-  header: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-  },
-  closeButton: {
-    padding: 10,
-  },
-  closeText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  profileImageContainer: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    borderWidth: 2,
-    borderColor: 'white',
-    overflow: 'hidden',
-    marginBottom: 20,
-  },
-  profileImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 75,
-  },
-  profileInfo: {
-    alignItems: 'center',
-    marginBottom: 20,
+  details: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
   name: {
-    color: 'white',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   location: {
-    color: 'white',
-    fontSize: 16,
+    fontSize: 20,
+    marginBottom: 10,
+    fontWeight: '400',
   },
   description: {
-    color: 'white',
-    textAlign: 'center',
-    paddingHorizontal: 20,
+    paddingVertical: 20,
+    fontSize: 14,
   },
-  interests: {
-    alignItems: 'center',
-  },
-  interestsTitle: {
-    color: 'white',
-    fontSize: 18,
+  interestText: {
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 10,
   },
-  interestContainer: {
+  interestRow: {
     flexDirection: 'row',
+    marginVertical: 10,
+  },
+  interestCol: {
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    marginHorizontal: 3,
+    backgroundColor: '#ce1694',
+    borderRadius: 15,
   },
   interest: {
     color: 'white',
-    fontSize: 16,
-    marginRight: 10,
+    textTransform: 'uppercase',
+    fontSize: 11,
   },
 });
 

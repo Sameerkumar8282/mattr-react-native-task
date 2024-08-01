@@ -1,24 +1,38 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const ProfileCard = () => {
+const data = require('../data.json'); 
+
+const ProfileCard = ({ index }) => { 
+  const navigation = useNavigation();
+  const profile = data[index]; 
   return (
+
     <View style={styles.cardContainer}>
-      <View style={styles.imageContainer}>
-        <Text style={styles.imagePlaceholder}>📷</Text>
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>TOP MATCH</Text>
-        </View>
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.nameText}>Frank Stark, 23</Text>
-        <Text style={styles.locationText}>London, United Kingdom</Text>
-        <TouchableOpacity style={styles.viewProfileButton}>
-          <Text style={styles.viewProfileText}>View Profile</Text>
-        </TouchableOpacity>
+    <View style={styles.imageContainer}>
+      {profile.photos && profile.photos.length > 0 ? (
+        <Image source={{ uri: profile.photos[0].path }} style={styles.image} /> // Display first image
+      ) : (
+        <Text style={styles.imagePlaceholder}></Text>
+      )}
+      <View style={styles.badge}>
+        <Text style={styles.badgeText}>TOP MATCH</Text>
       </View>
     </View>
-  );
+    <View style={styles.detailsContainer}>
+      <Text style={styles.nameText}>
+        {profile.first_name} {profile.last_name}, {profile.score}
+      </Text>
+      <Text style={styles.locationText}>
+        {profile.location.city}, {profile.location.country}
+      </Text>
+      <TouchableOpacity style={styles.viewProfileButton} onPress={() => navigation.navigate('ViewProfilePage', { profile })}>
+        <Text style={styles.viewProfileText}>View Profile</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+);
 };
 
 const styles = StyleSheet.create({

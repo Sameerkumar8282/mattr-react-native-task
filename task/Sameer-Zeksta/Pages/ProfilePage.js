@@ -1,13 +1,14 @@
 import React from "react";
 import ProfileCard from "../components/ProfileComponent";
+import data from "../data.json"
 
 const ProfilePage = () => {
   return (
     <>
-      <ProfileCard />
-      <ProfileCard />
-      <ProfileCard />
-    </>
+    {data.map((profile, index) => ( // Loop through data and render cards
+      <ProfileCard key={index} index={index} /> // Pass index as a prop
+    ))}
+  </>
   );
 };
 
