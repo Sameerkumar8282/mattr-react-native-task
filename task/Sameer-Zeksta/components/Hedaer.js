@@ -1,13 +1,15 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native';
 const Header = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerTop}>
         <Text style={styles.title}>Daily Connections</Text>
-        <TouchableOpacity onPress={() => console.log('Filter Pressed')}>
-          <Text style={styles.filterText}>Filter</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('FilterPage')}>
+        <Text style={styles.filterText}>Filter</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.refreshButton} onPress={() => console.log('Refresh Pressed')}>

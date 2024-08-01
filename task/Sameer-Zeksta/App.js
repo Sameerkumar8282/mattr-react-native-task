@@ -4,8 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text, ScrollView, SafeAreaView } from 'react-native';
 import Header from './components/Hedaer'; 
 import ProfilePage from './Pages/ProfilePage'; 
-// import ImageScroller from './components/ImageScroller';
-import ImageScroller from './components/ImageScroller';
+import MyProfile from './Pages/MyProfile';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,10 +21,8 @@ const ActivityScreen = () => {
 const ProfileScreen = () => {
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView>
-        <Text>fifefenvkj</Text>
-        <ImageScroller/>
-     </SafeAreaView>
+      <MyProfile/>
+     {/* <FilterPage/> */}
     </View>
   );
 };
