@@ -9,7 +9,7 @@ const ProfileCard = ({ profile }) => {
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
         {profile.photos && profile.photos.length > 0 ? (
-          <Image source={{ uri: profile.photos[0].path }} style={styles.image} /> // Display first image
+          <Image source={{ uri: profile.photos[0].path }} style={styles.image} /> 
         ) : (
           <Text style={styles.imagePlaceholder}></Text>
         )}
@@ -24,7 +24,7 @@ const ProfileCard = ({ profile }) => {
         <Text style={styles.locationText}>
           {profile.location.city}, {profile.location.country}
         </Text>
-        <TouchableOpacity style={styles.viewProfileButton} onPress={() => navigation.navigate('ViewProfilePage', { profile })}>
+        <TouchableOpacity style={styles.viewProfileButton} onPress={() => navigation.navigate('ViewProfile', { profile })}>
           <Text style={styles.viewProfileText}>View Profile</Text>
         </TouchableOpacity>
       </View>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   imageContainer: {
-    backgroundColor: '#C71585', // Adjust this to match the pink color in your image
+    backgroundColor: '#C71585',
     height: 150,
     justifyContent: 'center',
     alignItems: 'center',
