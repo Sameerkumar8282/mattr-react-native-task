@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     backgroundColor: '#C71585',
-    height: 150,
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',

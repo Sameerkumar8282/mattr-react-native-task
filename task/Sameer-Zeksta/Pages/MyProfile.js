@@ -1,9 +1,11 @@
-import React from 'react';
-import { View, Image, StyleSheet, Text, ScrollView } from 'react-native';
+import React, { useState, useRef, useCallback } from 'react';
+import { View, Image, StyleSheet, Text, ScrollView, FlatList } from 'react-native';
 const data = require('../data.json');
 
 const MyProfile = () => {
   const user = data[0];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const flatListRef = useRef(null);
 
   const getAge = (dob) => {
     const [day, month, year] = dob.split('/').map(Number);
@@ -19,14 +21,48 @@ const MyProfile = () => {
 
   const age = getAge(user.dob);
 
+  const viewableItemsChanged = useCallback(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index);
+    }
+  }, []);
+
+  const renderDot = (index) => (
+    <View
+      key={index}
+      style={[styles.dot, currentIndex === index && styles.activeDot]}
+    />
+  );
+
+  const renderItem = ({ item }) => (
+    <Image source={{ uri: item.path }} style={styles.image} />
+  );
+
   return (
     <View>
       <ScrollView>
-        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
-          {user.photos.map((photo) => (
-            <Image key={photo.id} style={styles.image} source={{ uri: photo.path }} />
-          ))}
-        </ScrollView>
+        {user.photos && user.photos.length > 0 ? (
+          <>
+            <FlatList
+              ref={flatListRef}
+              data={user.photos}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal
+              pagingEnabled
+              onViewableItemsChanged={viewableItemsChanged}
+              showsHorizontalScrollIndicator={false}
+              viewabilityConfig={{
+                itemVisiblePercentThreshold: 50,
+              }}
+            />
+            <View style={styles.dotsContainer}>
+              {user.photos.map((_, index) => renderDot(index))}
+            </View>
+          </>
+        ) : (
+          <Text style={styles.imagePlaceholder}>No Image</Text>
+        )}
         <View style={styles.details}>
           <Text style={styles.name}>
             {`${user.first_name} ${user.last_name}, ${age}`}
@@ -49,8 +85,23 @@ const MyProfile = () => {
 
 const styles = StyleSheet.create({
   image: {
-    width: 400,
-    height: 400,
+    width: 400, 
+    height: 400, 
+  },
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#c2c2c2',
+    marginHorizontal: 5,
+  },
+  activeDot: {
+    backgroundColor: '#edebeb',
   },
   details: {
     paddingHorizontal: 20,
@@ -76,6 +127,7 @@ const styles = StyleSheet.create({
   interestRow: {
     flexDirection: 'row',
     marginVertical: 10,
+    flexWrap: 'wrap',
   },
   interestCol: {
     paddingHorizontal: 20,
@@ -83,6 +135,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
     backgroundColor: '#ce1694',
     borderRadius: 15,
+    marginBottom: 10,
   },
   interest: {
     color: 'white',

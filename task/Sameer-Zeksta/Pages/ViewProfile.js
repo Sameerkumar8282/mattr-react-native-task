@@ -88,8 +88,8 @@ const ViewProfilePage = () => {
 
 const styles = StyleSheet.create({
   image: {
-    width: 392,
-    height: 650,
+    width: 400, 
+    height: 400, 
   },
   dotsContainer: {
     flexDirection: 'row',
