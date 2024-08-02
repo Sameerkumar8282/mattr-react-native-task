@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-const Header = () => {
+
+const Header = ({ refreshProfiles }) => {
   const navigation = useNavigation();
 
   return (
@@ -9,10 +10,10 @@ const Header = () => {
       <View style={styles.headerTop}>
         <Text style={styles.title}>Daily Connections</Text>
         <TouchableOpacity onPress={() => navigation.navigate('FilterPage')}>
-        <Text style={styles.filterText}>Filter</Text>
+          <Text style={styles.filterText}>Filter</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.refreshButton} onPress={() => console.log('Refresh Pressed')}>
+      <TouchableOpacity style={styles.refreshButton} onPress={refreshProfiles}>
         <Text style={styles.refreshText}>Refresh</Text>
       </TouchableOpacity>
     </View>

@@ -1,6 +1,7 @@
-import React from 'react';
-import { ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import ProfileCard from '../components/ProfileComponent';
+import Header from '../components/Hedaer'; 
 import data from '../data.json';
 
 const shuffleArray = (array) => {
@@ -13,15 +14,33 @@ const shuffleArray = (array) => {
 };
 
 const ProfilePage = () => {
-  const randomProfiles = shuffleArray(data).slice(0, 5); 
+  const [profiles, setProfiles] = useState([]);
+
+  const refreshProfiles = () => {
+    const randomProfiles = shuffleArray(data).slice(0, 5);
+    setProfiles(randomProfiles);
+  };
+
+  useEffect(() => {
+    refreshProfiles();
+  }, []); 
 
   return (
-    <ScrollView>
-      {randomProfiles.map((profile, index) => (
-        <ProfileCard key={index} profile={profile} /> 
-      ))}
-    </ScrollView>
+    <View style={styles.container}>
+      <Header refreshProfiles={refreshProfiles} />
+      <ScrollView>
+        {profiles.map((profile, index) => (
+          <ProfileCard key={index} profile={profile} />
+        ))}
+      </ScrollView>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default ProfilePage;

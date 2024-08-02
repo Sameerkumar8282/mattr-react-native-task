@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text, ScrollView, SafeAreaView } from 'react-native';
-import Header from './components/Hedaer'; // Import Header component
 import ProfilePage from './Pages/ProfilePage'; 
 import MyProfile from './Pages/MyProfile';
 import ViewProfile from './Pages/ViewProfile';
@@ -25,7 +24,6 @@ const ActivityStack = () => {
 const ActivityScreen = () => {
   return (
     <View style={{ flex: 1 }}>
-      <Header />
       <ScrollView>
         <ProfilePage />
       </ScrollView>
