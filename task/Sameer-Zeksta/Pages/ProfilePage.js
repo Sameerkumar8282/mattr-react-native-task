@@ -4,20 +4,22 @@ import ProfileCard from '../components/ProfileComponent';
 import Header from '../components/Hedaer'; 
 import data from '../data.json';
 
-const shuffleArray = (array) => {
-  let shuffledArray = array.slice();
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+const getRandomProfiles = (data, count) => {
+  const uniqueProfiles = new Set();
+  
+  while (uniqueProfiles.size < count) {
+    const randomIndex = Math.floor(Math.random() * data.length);
+    uniqueProfiles.add(data[randomIndex]);
   }
-  return shuffledArray;
+
+  return Array.from(uniqueProfiles);
 };
 
 const ProfilePage = () => {
   const [profiles, setProfiles] = useState([]);
 
   const refreshProfiles = () => {
-    const randomProfiles = shuffleArray(data).slice(0, 5);
+    const randomProfiles = getRandomProfiles(data, 5);
     setProfiles(randomProfiles);
   };
 
