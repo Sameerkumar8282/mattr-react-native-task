@@ -87,7 +87,7 @@ const ViewProfilePage = () => {
           <Text style={styles.location}>
             {profile.location.city}, {profile.location.country}
           </Text>
-          <Text style={styles.description}>{profile.description}</Text>
+          <Text style={styles.description}>{profile.bio}</Text>
           <Text style={styles.interestText}>Interests</Text>
           <View style={styles.interestRow}>
             {profile.interests && profile.interests.map((interest, index) => (
