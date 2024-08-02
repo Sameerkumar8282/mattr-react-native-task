@@ -18,7 +18,6 @@ const FilterPage = () => {
   };
 
   const handleApplyFilters = () => {
-    // Implement filter logic here
     console.log('Filters applied:', { gender, ageRange, sortBy });
   };
 

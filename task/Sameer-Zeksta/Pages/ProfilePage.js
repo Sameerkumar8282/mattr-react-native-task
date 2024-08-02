@@ -30,7 +30,7 @@ const ProfilePage = () => {
       <Header refreshProfiles={refreshProfiles} />
       <ScrollView>
         {profiles.map((profile, index) => (
-          <ProfileCard key={index} profile={profile} />
+          <ProfileCard key={index} profile={profile} isTopMatch={index === 0} />
         ))}
       </ScrollView>
     </View>

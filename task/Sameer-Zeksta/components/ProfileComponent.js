@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const ProfileCard = ({ profile }) => { 
+const ProfileCard = ({ profile, isTopMatch }) => { 
   const navigation = useNavigation();
 
   const getAge = (dob) => {
@@ -27,9 +27,11 @@ const ProfileCard = ({ profile }) => {
         ) : (
           <Text style={styles.imagePlaceholder}>No Image</Text>
         )}
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>TOP MATCH</Text>
-        </View>
+        {isTopMatch && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>TOP MATCH</Text>
+          </View>
+        )}
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.nameText}>
