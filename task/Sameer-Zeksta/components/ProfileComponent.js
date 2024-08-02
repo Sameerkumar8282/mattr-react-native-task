@@ -5,13 +5,27 @@ import { useNavigation } from '@react-navigation/native';
 const ProfileCard = ({ profile }) => { 
   const navigation = useNavigation();
 
+  const getAge = (dob) => {
+    const [day, month, year] = dob.split('/').map(Number);
+    const birthDate = new Date(year, month - 1, day);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const age = getAge(profile.dob);
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
         {profile.photos && profile.photos.length > 0 ? (
           <Image source={{ uri: profile.photos[0].path }} style={styles.image} /> 
         ) : (
-          <Text style={styles.imagePlaceholder}></Text>
+          <Text style={styles.imagePlaceholder}>No Image</Text>
         )}
         <View style={styles.badge}>
           <Text style={styles.badgeText}>TOP MATCH</Text>
@@ -19,7 +33,7 @@ const ProfileCard = ({ profile }) => {
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.nameText}>
-          {profile.first_name} {profile.last_name}, {profile.score}
+          {profile.first_name} {profile.last_name}, {age}
         </Text>
         <Text style={styles.locationText}>
           {profile.location.city}, {profile.location.country}

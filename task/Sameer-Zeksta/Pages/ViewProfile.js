@@ -27,6 +27,20 @@ const ViewProfilePage = () => {
     <Image source={{ uri: item.path }} style={styles.image} />
   );
 
+  const getAge = (dob) => {
+    const [day, month, year] = dob.split('/').map(Number);
+    const birthDate = new Date(year, month - 1, day);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const age = getAge(profile.dob);
+
   return (
     <View>
       <ScrollView>
@@ -53,7 +67,7 @@ const ViewProfilePage = () => {
           <Text style={styles.imagePlaceholder}>No Image</Text>
         )}
         <View style={styles.details}>
-          <Text style={styles.name}>{profile.first_name} {profile.last_name}, {profile.score}</Text>
+          <Text style={styles.name}>{profile.first_name} {profile.last_name}, {age}</Text>
           <Text style={styles.location}>
             {profile.location.city}, {profile.location.country}
           </Text>
