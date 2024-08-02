@@ -1,11 +1,13 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons'; 
 
 const ViewProfilePage = () => {
   const route = useRoute();
   const { profile } = route.params;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [liked, setLiked] = useState(false); 
   const flatListRef = useRef(null);
 
   const viewableItemsChanged = useCallback(({ viewableItems }) => {
@@ -13,6 +15,10 @@ const ViewProfilePage = () => {
       setCurrentIndex(viewableItems[0].index);
     }
   }, []);
+
+  const toggleLike = () => {
+    setLiked(!liked);
+  };
 
   const keyExtractor = (item) => item.id.toString();
 
@@ -67,7 +73,17 @@ const ViewProfilePage = () => {
           <Text style={styles.imagePlaceholder}>No Image</Text>
         )}
         <View style={styles.details}>
-          <Text style={styles.name}>{profile.first_name} {profile.last_name}, {age}</Text>
+          <View style={styles.nameRow}>
+            <Text style={styles.name}>{profile.first_name} {profile.last_name}, {age}</Text>
+            <TouchableOpacity onPress={toggleLike}>
+              <Icon
+                name={liked ? 'heart' : 'heart-outline'}
+                size={32}
+                color={liked ? 'red' : 'black'}
+                style={styles.heartIcon}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.location}>
             {profile.location.city}, {profile.location.country}
           </Text>
@@ -111,9 +127,17 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingBottom: 20,
   },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   name: {
     fontSize: 22,
     fontWeight: 'bold',
+    flex: 1,
+  },
+  heartIcon: {
+    marginLeft: 10,
   },
   location: {
     fontSize: 20,
