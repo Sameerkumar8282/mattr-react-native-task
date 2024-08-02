@@ -4,9 +4,9 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 
 const FilterPage = () => {
   const navigate= useNavigation();
-  const [gender, setGender] = useState(null); // Default to female
-  const [ageRange, setAgeRange] = useState(null); // Default to 25-30
-  const [sortBy, setSortBy] = useState('Score'); // Default to Score
+  const [gender, setGender] = useState(null); 
+  const [ageRange, setAgeRange] = useState(null); 
+  const [sortBy, setSortBy] = useState('Score');
 
   const handleGenderChange = (selectedGender) => {
     setGender(selectedGender);

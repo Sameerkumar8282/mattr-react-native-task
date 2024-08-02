@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import ProfileCard from '../components/ProfileComponent';
-import Header from '../components/Hedaer'; // Corrected the spelling here
+import Header from '../components/Hedaer';
 import data from '../data.json';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
