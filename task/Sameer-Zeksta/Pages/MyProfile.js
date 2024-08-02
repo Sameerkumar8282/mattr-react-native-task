@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Image, StyleSheet, Text, ScrollView } from 'react-native';
-const data = require('../data.json'); 
+const data = require('../data.json');
 
 const MyProfile = () => {
-  const user = data[0]; 
+  const user = data[0];
 
   return (
     <View>
@@ -14,7 +14,9 @@ const MyProfile = () => {
           ))}
         </ScrollView>
         <View style={styles.details}>
-          <Text style={styles.name}>{`${user.first_name} ${user.last_name}, ${new Date().getFullYear() - new Date(user.dob.split('/').reverse().join('/')).getFullYear()}`}</Text>
+          <Text style={styles.name}>
+            {`${user.first_name} ${user.last_name}, ${new Date().getFullYear() - new Date(user.dob.split('/').reverse().join('/')).getFullYear()}`}
+          </Text>
           <Text style={styles.location}>{`${user.location.city}, ${user.location.country}`}</Text>
           <Text style={styles.description}>{user.bio}</Text>
           <Text style={styles.interestText}>Interests</Text>

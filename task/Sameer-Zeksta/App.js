@@ -14,7 +14,11 @@ const Stack = createStackNavigator();
 const ActivityStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Activity" component={ActivityScreen} />
+      <Stack.Screen name="Activity" component={ActivityScreen} options={
+       {
+        headerShown:false
+       } 
+      } />
       <Stack.Screen name="FilterPage" component={FilterPage} />
       <Stack.Screen name="ViewProfile" component={ViewProfile} />
     </Stack.Navigator>

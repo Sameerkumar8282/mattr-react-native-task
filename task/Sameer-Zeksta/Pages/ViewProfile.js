@@ -1,19 +1,54 @@
-import React from 'react';
-import { View, Image, StyleSheet, Text, ScrollView } from 'react-native';
+import React, { useState, useRef, useCallback } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
 const ViewProfilePage = () => {
   const route = useRoute();
   const { profile } = route.params;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const flatListRef = useRef(null);
+
+  const viewableItemsChanged = useCallback(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index);
+    }
+  }, []);
+
+  const keyExtractor = (item) => item.id.toString();
+
+  const renderDot = (index) => (
+    <View
+      key={index}
+      style={[styles.dot, currentIndex === index && styles.activeDot]}
+    />
+  );
+
+  const renderItem = ({ item }) => (
+    <Image source={{ uri: item.path }} style={styles.image} />
+  );
 
   return (
     <View>
       <ScrollView>
         {profile.photos && profile.photos.length > 0 ? (
-          <Image
-            style={styles.image}
-            source={{ uri: profile.photos[0].path }} 
-          />
+          <>
+            <FlatList
+              ref={flatListRef}
+              data={profile.photos}
+              renderItem={renderItem}
+              keyExtractor={keyExtractor}
+              horizontal
+              pagingEnabled
+              onViewableItemsChanged={viewableItemsChanged}
+              showsHorizontalScrollIndicator={false}
+              viewabilityConfig={{
+                itemVisiblePercentThreshold: 50,
+              }}
+            />
+            <View style={styles.dotsContainer}>
+              {profile.photos.map((_, index) => renderDot(index))}
+            </View>
+          </>
         ) : (
           <Text style={styles.imagePlaceholder}>No Image</Text>
         )}
@@ -35,12 +70,27 @@ const ViewProfilePage = () => {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   image: {
-    width: '100%',
-    height: 400,
+    width: 392,
+    height: 650,
+  },
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#c2c2c2',
+    marginHorizontal: 5,
+  },
+  activeDot: {
+    backgroundColor: '#edebeb',
   },
   details: {
     paddingHorizontal: 20,
