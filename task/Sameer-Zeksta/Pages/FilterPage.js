@@ -1,8 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+
 const FilterPage = () => {
-  const [gender, setGender] = useState('FEMALE'); // Default to female
-  const [ageRange, setAgeRange] = useState('25-30'); // Default to 25-30
+  const navigate= useNavigation();
+  const [gender, setGender] = useState(null); // Default to female
+  const [ageRange, setAgeRange] = useState(null); // Default to 25-30
   const [sortBy, setSortBy] = useState('Score'); // Default to Score
 
   const handleGenderChange = (selectedGender) => {
@@ -19,6 +22,7 @@ const FilterPage = () => {
 
   const handleApplyFilters = () => {
     console.log('Filters applied:', { gender, ageRange, sortBy });
+    navigate.navigate('Activity',{filterData:{ gender, ageRange, sortBy }})
   };
 
   return (

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import ProfileCard from '../components/ProfileComponent';
-import Header from '../components/Hedaer'; 
+import Header from '../components/Hedaer'; // Corrected the spelling here
 import data from '../data.json';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const getRandomProfiles = (data, count) => {
   const uniqueProfiles = new Set();
@@ -16,7 +17,10 @@ const getRandomProfiles = (data, count) => {
 };
 
 const ProfilePage = () => {
+  const navigate = useNavigation();
+  const route = useRoute();
   const [profiles, setProfiles] = useState([]);
+  const [filter, setFilter] = useState([]);
 
   const refreshProfiles = () => {
     const randomProfiles = getRandomProfiles(data, 5);
@@ -27,12 +31,21 @@ const ProfilePage = () => {
     refreshProfiles();
   }, []); 
 
+  useEffect(() => {
+    if (route.params?.filterData) {
+      setFilter(route.params.filterData);
+    } else {
+      setFilter(profiles);
+    }
+  }, [route.params?.filterData, profiles]);
+
+
   return (
     <View style={styles.container}>
       <Header refreshProfiles={refreshProfiles} />
       <ScrollView>
-        {profiles.map((profile, index) => (
-          <ProfileCard key={index} profile={profile} isTopMatch={index === 0} />
+        {filter?.map((profile, index) => (
+          <ProfileCard key={profile.id} profile={profile} isTopMatch={index === 0} />
         ))}
       </ScrollView>
     </View>
