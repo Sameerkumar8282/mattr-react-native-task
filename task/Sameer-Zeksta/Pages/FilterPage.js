@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import data from '../data.json';
 
 const FilterPage = () => {
-  const navigate= useNavigation();
+  const navigation = useNavigation();
   const [gender, setGender] = useState(null); 
   const [ageRange, setAgeRange] = useState(null); 
   const [sortBy, setSortBy] = useState('Score');
@@ -20,14 +21,58 @@ const FilterPage = () => {
     setSortBy(selectedSortBy);
   };
 
+  const calculateAge = (dob) => {
+    const birthDate = new Date(dob.split('/').reverse().join('-'));
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
   const handleApplyFilters = () => {
+    const filteredData = data.filter(item => {
+      const itemGender = item.gender.toUpperCase();
+      const itemAge = calculateAge(item.dob);
+
+      let ageMatch = true;
+      if (ageRange === '20-24') ageMatch = itemAge >= 20 && itemAge <= 24;
+      if (ageRange === '25-30') ageMatch = itemAge >= 25 && itemAge <= 30;
+      if (ageRange === '30-40') ageMatch = itemAge >= 30 && itemAge <= 40;
+      if (ageRange === '40+') ageMatch = itemAge > 40;
+
+      return (
+        (!gender || gender === itemGender) &&
+        (!ageRange || ageMatch)
+      );
+    });
+
+    if (sortBy === 'Score') {
+      filteredData.sort((a, b) => b.score - a.score);
+    } else if (sortBy === 'Date Joined') {
+      filteredData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
     console.log('Filters applied:', { gender, ageRange, sortBy });
-    navigate.navigate('Activity',{filterData:{ gender, ageRange, sortBy }})
+    navigation.navigate('Activity', { filteredData });
+  };
+
+  const handleClearFilters = () => {
+    setGender(null);
+    setAgeRange(null);
+    setSortBy('Score');
   };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Filter</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Filter</Text>
+        <TouchableOpacity style={styles.clearButton} onPress={handleClearFilters}>
+          <Text style={styles.clearButtonText}>Clear</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.section}>
         <Text style={styles.label}>Gender</Text>
@@ -101,10 +146,24 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  clearButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  clearButtonText: {
+    fontSize: 16,
+    color: 'red',
+    fontWeight: 'bold',
   },
   section: {
     marginBottom: 20,
