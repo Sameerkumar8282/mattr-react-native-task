@@ -1,7 +1,44 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import data from '../data.json';
+
+const calculateAge = (dob) => {
+  const birthDate = new Date(dob.split('/').reverse().join('-'));
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+const filterProfiles = (data, gender, ageRange, sortBy) => {
+  let filteredData = data.filter(item => {
+    const itemGender = item.gender.toUpperCase();
+    const itemAge = calculateAge(item.dob);
+
+    let ageMatch = true;
+    if (ageRange === '20-24') ageMatch = itemAge >= 20 && itemAge <= 24;
+    if (ageRange === '25-30') ageMatch = itemAge >= 25 && itemAge <= 30;
+    if (ageRange === '30-40') ageMatch = itemAge >= 30 && itemAge <= 40;
+    if (ageRange === '40+') ageMatch = itemAge > 40;
+
+    return (
+      (!gender || gender === itemGender) &&
+      (!ageRange || ageMatch)
+    );
+  });
+
+  if (sortBy === 'Score') {
+    filteredData.sort((a, b) => b.score - a.score);
+  } else if (sortBy === 'Date Joined') {
+    filteredData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }
+
+  return filteredData;
+};
 
 const FilterPage = () => {
   const navigation = useNavigation();
@@ -9,28 +46,32 @@ const FilterPage = () => {
   const [ageRange, setAgeRange] = useState(null); 
   const [sortBy, setSortBy] = useState('Score');
 
-  const handleGenderChange = (selectedGender) => {
+  const handleGenderChange = useCallback((selectedGender) => {
     setGender(selectedGender);
-  };
+  }, []);
 
-  const handleAgeRangeChange = (selectedAgeRange) => {
+  const handleAgeRangeChange = useCallback((selectedAgeRange) => {
     setAgeRange(selectedAgeRange);
-  };
+  }, []);
 
-  const handleSortByChange = (selectedSortBy) => {
+  const handleSortByChange = useCallback((selectedSortBy) => {
     setSortBy(selectedSortBy);
-  };
+  }, []);
 
-  const handleApplyFilters = () => {
+  const filteredData = useMemo(() => {
+    return filterProfiles(data, gender, ageRange, sortBy);
+  }, [gender, ageRange, sortBy]);
+
+  const handleApplyFilters = useCallback(() => {
     console.log('Filters applied:', { gender, ageRange, sortBy });
-    navigation.navigate('Activity', { filteredData: filterProfiles(data, gender, ageRange, sortBy) });
-  };
+    navigation.navigate('Activity', { filteredData });
+  }, [filteredData, gender, ageRange, sortBy]);
 
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
     setGender(null);
     setAgeRange(null);
     setSortBy('Score');
-  };
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
