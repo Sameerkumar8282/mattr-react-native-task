@@ -4,10 +4,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import ProfilePage from './Pages/ProfilePage'; 
-import MyProfile from './Pages/MyProfile';
-import ViewProfile from './Pages/ViewProfile';
-import FilterPage from './Pages/FilterPage';
+import ProfilePage from './page/ProfilePage'; 
+import MyProfile from './page/MyProfile';
+import ViewProfile from './page/ViewProfile';
+import FilterPage from './page/FilterPage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
