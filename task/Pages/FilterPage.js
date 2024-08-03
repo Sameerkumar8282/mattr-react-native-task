@@ -3,48 +3,52 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import data from '../data.json';
 
-const calculateAge = (dob) => {
-  const birthDate = new Date(dob.split('/').reverse().join('-'));
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-};
-
-const filterProfiles = (data, gender, ageRange, sortBy) => {
-  let filteredData = data.filter(item => {
-    const itemGender = item.gender.toUpperCase();
-    const itemAge = calculateAge(item.dob);
-
-    let ageMatch = true;
-    if (ageRange === '20-24') ageMatch = itemAge >= 20 && itemAge <= 24;
-    if (ageRange === '25-30') ageMatch = itemAge >= 25 && itemAge <= 30;
-    if (ageRange === '30-40') ageMatch = itemAge >= 30 && itemAge <= 40;
-    if (ageRange === '40+') ageMatch = itemAge > 40;
-
-    return (
-      (!gender || gender === itemGender) &&
-      (!ageRange || ageMatch)
-    );
-  });
-
-  if (sortBy === 'Score') {
-    filteredData.sort((a, b) => b.score - a.score);
-  } else if (sortBy === 'Date Joined') {
-    filteredData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  }
-
-  return filteredData;
-};
-
 const FilterPage = () => {
   const navigation = useNavigation();
   const [gender, setGender] = useState(null); 
   const [ageRange, setAgeRange] = useState(null); 
   const [sortBy, setSortBy] = useState('Score');
+
+  const calculateAge = useCallback((dob) => {
+    const birthDate = new Date(dob.split('/').reverse().join('-'));
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }, []);
+
+  const filterProfiles = useCallback((data, gender, ageRange, sortBy) => {
+    let filteredData = data.filter(item => {
+      const itemGender = item.gender.toUpperCase();
+      const itemAge = calculateAge(item.dob);
+
+      let ageMatch = true;
+      if (ageRange === '20-24') ageMatch = itemAge >= 20 && itemAge <= 24;
+      if (ageRange === '25-30') ageMatch = itemAge >= 25 && itemAge <= 30;
+      if (ageRange === '30-40') ageMatch = itemAge >= 30 && itemAge <= 40;
+      if (ageRange === '40+') ageMatch = itemAge > 40;
+
+      return (
+        (!gender || gender === itemGender) &&
+        (!ageRange || ageMatch)
+      );
+    });
+
+    if (sortBy === 'Score') {
+      filteredData.sort((a, b) => b.score - a.score);
+    } else if (sortBy === 'Date Joined') {
+      filteredData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
+    return filteredData;
+  }, [calculateAge]);
+
+  const filteredData = useMemo(() => {
+    return filterProfiles(data, gender, ageRange, sortBy);
+  }, [filterProfiles, gender, ageRange, sortBy]);
 
   const handleGenderChange = useCallback((selectedGender) => {
     setGender(selectedGender);
@@ -58,14 +62,10 @@ const FilterPage = () => {
     setSortBy(selectedSortBy);
   }, []);
 
-  const filteredData = useMemo(() => {
-    return filterProfiles(data, gender, ageRange, sortBy);
-  }, [gender, ageRange, sortBy]);
-
   const handleApplyFilters = useCallback(() => {
     console.log('Filters applied:', { gender, ageRange, sortBy });
     navigation.navigate('Activity', { filteredData });
-  }, [filteredData, gender, ageRange, sortBy]);
+  }, [filteredData, gender, ageRange, sortBy, navigation]);
 
   const handleClearFilters = useCallback(() => {
     setGender(null);
